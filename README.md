@@ -25,6 +25,24 @@ Test the C Program for the desired output.
 
 ## C Program to create new process using Linux API system calls fork() and getpid() , getppid() and to print process ID and parent Process ID using Linux API system calls
 
+C Program to create new process using Linux API system calls fork() and getpid() , getppid() and to print process ID and parent Process ID using Linux API system calls
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+~~~
+int main() {
+    int pid = fork();
+
+    if (pid == 0) { 
+        printf("I am child, my PID is %d\n", getpid()); 
+        printf("My parent PID is: %d\n", getppid()); 
+        sleep(2);  // Keep child alive for verification
+    } else { 
+        printf("I am parent, my PID is %d\n", getpid()); 
+        wait(NULL); 
+    }
+}
+~~~
 
 
 
@@ -34,11 +52,9 @@ Test the C Program for the desired output.
 
 
 
+## OUTPUT
 
-
-
-##OUTPUT
-
+<img width="765" height="331" alt="Screenshot 2025-09-12 143251" src="https://github.com/user-attachments/assets/d15eaceb-5aca-453d-a60a-9f62d3cfc2be" />
 
 
 
@@ -48,6 +64,48 @@ Test the C Program for the desired output.
 
 ## C Program to execute Linux system commands using Linux API system calls exec() , exit() , wait() family
 
+~~~
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+#include <unistd.h>
+
+int main() {
+    int status;
+    
+    printf("Running ps with execl\n");
+    if (fork() == 0) {
+        execl("ps", "ps", "-f", NULL);
+        perror("execl failed");
+        exit(1);
+    }
+    wait(&status);
+    
+    if (WIFEXITED(status)) {
+        printf("Child exited with status: %d\n", WEXITSTATUS(status));
+    } else {
+        printf("Child did not exit successfully\n");
+    }
+    
+    printf("Running ps with execlp (without full path)\n");
+    if (fork() == 0) {
+        execlp("ps", "ps", "-f", NULL);
+        perror("execlp failed");
+        exit(1);
+    }
+    wait(&status);
+    
+    if (WIFEXITED(status)) {
+        printf("Child exited for execlp with status: %d\n", WEXITSTATUS(status));
+    } else {
+        printf("Child did not exit successfully\n");
+    }
+    
+    printf("Done.\n");
+    return 0;
+}
+~~~
 
 
 
@@ -70,12 +128,9 @@ Test the C Program for the desired output.
 
 
 
+## OUTPUT
 
-
-
-##OUTPUT
-
-
+<img width="838" height="238" alt="Screenshot 2025-09-12 143239" src="https://github.com/user-attachments/assets/fb7b73d6-aa0a-4928-9ec3-b8893786e6a8" />
 
 
 
